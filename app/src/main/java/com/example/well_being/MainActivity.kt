@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ListView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -40,7 +42,10 @@ class MainActivity : ComponentActivity() {
     }
 
     fun sendData(view: View) {
-        is_started = true
+        val listView : ListView=findViewById(R.id.listPressureListView)
+        val arrayPressure:MutableList<String> = mutableListOf()
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,arrayPressure)
+        listView.adapter = adapter
         val thread = Thread(Runnable {
             try {
                 val currentDate = Date()
@@ -59,9 +64,9 @@ class MainActivity : ComponentActivity() {
                 val mediaType = "application/json".toMediaTypeOrNull()
                 pressureEditTextNumber=findViewById(R.id.pressureEditTextNumber)
                 var r = if (checkBox.isChecked) {
-                    "yes"
+                    true
                 } else {
-                    "no"
+                    false
                 }
                 val dto:DTO= DTO(pressureEditTextNumber.text.toString(),r)
                 var body = RequestBody.create(
@@ -70,7 +75,7 @@ class MainActivity : ComponentActivity() {
                         mapOf(
                             "data " + "${dateText}" to mapOf(
                                 "time " + "${timeText}" to "pressure " + "${editText.text}",
-                                "headache" to r
+                                "headache" to r.toString()
                             )
                         )
                     ).toString()
@@ -86,6 +91,7 @@ class MainActivity : ComponentActivity() {
                 runOnUiThread(Runnable {
                     textView = findViewById(R.id.sentTextView)
                     textView.setText("Отправлено")
+                    adapter.insert(pressureEditTextNumber.text.toString(),0)
                 })
             } catch (e: IOException) {
                 e.printStackTrace()
