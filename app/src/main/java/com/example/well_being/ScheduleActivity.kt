@@ -1,14 +1,7 @@
 package com.example.well_being
 
 import android.os.Bundle
-import android.view.View
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.well_being.databinding.ActivityScheduleBinding
 import co.yml.charts.ui.linechart.LineChart
 import co.yml.charts.ui.linechart.model.GridLines
 import co.yml.charts.ui.linechart.model.IntersectionPoint
@@ -29,18 +22,24 @@ import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.Point
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 const val steps = 10
@@ -49,58 +48,88 @@ class ScheduleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_schedule)
         sendData()
         val pointList = getPointList()
         val getMax = getMax(pointList)
         val getMin = getMin(pointList)
-        setContent {
-            val xAxisData = AxisData.Builder()
-                .axisStepSize(100.dp)
-                .backgroundColor(Color.Transparent)
-                .steps(pointList.size - 1)
-                .labelData { i -> i.toString() }
-                .labelAndAxisLinePadding(15.dp)
-                .build()
-
-            val yAxisData = AxisData.Builder()
-                .steps(steps)
-                .backgroundColor(Color.White)
-                .labelAndAxisLinePadding(20.dp)
-                .labelData { i ->
-                    val yScale = (getMax - getMin) / steps.toFloat()
-                    String.format("%.1f", ((i * yScale) + getMin))
-                }.build()
-            WellbeingTheme {
-                val lineChartData = LineChartData(
-                    linePlotData = LinePlotData(
-                        lines = listOf(
-                            Line(
-                                dataPoints = pointList,
-                                LineStyle(color = Color.Green, width = 2.0f),
-                                IntersectionPoint(color = Color.Blue, radius = 4.dp),
-                                SelectionHighlightPoint(color = Color.Red),
-                                ShadowUnderLine(color = Color.Gray),
-                                SelectionHighlightPopUp()
-                            )
-                        ),
-                    ),
-                    xAxisData = xAxisData,
-                    yAxisData = yAxisData,
-                    gridLines = GridLines(),
-                    backgroundColor = Color.White
-                )
-                LineChart(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp),
-                    lineChartData = lineChartData
-                )
-            }
-        }
     }
 
 
     fun sendData() {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+        val mediaType = "application/json".toMediaTypeOrNull()
+        val retrofit = Retrofit.Builder().baseUrl("http://192.168.1.102:3001")
+            .addConverterFactory(GsonConverterFactory.create()).build()
+        val dtoApi = retrofit.create(DTOApi::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            val dto = dtoApi.getDTO()
+            val dto2 = DTO("1234",false)
+            runOnUiThread {
+//                            val body:String = response.body.toString()
+//                            val builder = GsonBuilder()
+//                            val listType = object : TypeToken<ArrayList<DTO?>>() {}.type
+//                            val list: ArrayList<DTO> = Gson().fromJson(body, listType)
+//                            val pointList: MutableList<Point>  = mutableListOf()
+//                            var i:Float = 1f
+//                            var j:Float = 1f
+//                            list.forEach{
+//                                pointList.add(
+//                                    Point(x = i++,
+//                                        y = j++)
+//                                )
+//                            }
+                val pointList = getPointList()
+                val getMax = getMax(pointList)
+                val getMin = getMin(pointList)
+                setContent {
+                    val xAxisData = AxisData.Builder()
+                        .axisStepSize(100.dp)
+                        .backgroundColor(Color.Transparent)
+                        .steps(pointList.size - 1)
+                        .labelData { i -> i.toString() }
+                        .labelAndAxisLinePadding(15.dp)
+                        .build()
+
+                    val yAxisData = AxisData.Builder()
+                        .steps(steps)
+                        .backgroundColor(Color.White)
+                        .labelAndAxisLinePadding(20.dp)
+                        .labelData { i ->
+                            val yScale = (getMax - getMin) / steps.toFloat()
+                            String.format("%.1f", ((i * yScale) + getMin))
+                        }.build()
+                    WellbeingTheme {
+                        val lineChartData = LineChartData(
+                            linePlotData = LinePlotData(
+                                lines = listOf(
+                                    Line(
+                                        dataPoints = pointList,
+                                        LineStyle(color = Color.Green, width = 2.0f),
+                                        IntersectionPoint(color = Color.Blue, radius = 4.dp),
+                                        SelectionHighlightPoint(color = Color.Red),
+                                        ShadowUnderLine(color = Color.Gray),
+                                        SelectionHighlightPopUp()
+                                    )
+                                ),
+                            ),
+                            xAxisData = xAxisData,
+                            yAxisData = yAxisData,
+                            gridLines = GridLines(),
+                            backgroundColor = Color.White
+                        )
+                        LineChart(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp),
+                            lineChartData = lineChartData
+                        )
+                    }
+                }
+            }
+        }
         val thread = Thread(Runnable {
             try {
                 val currentDate = Date()
@@ -108,14 +137,6 @@ class ScheduleActivity : AppCompatActivity() {
                 val dateText: String = dateFormat.format(currentDate)
                 val timeFormat: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
                 val timeText: String = timeFormat.format(currentDate)
-                val builder: OkHttpClient.Builder = OkHttpClient.Builder()
-                builder.connectTimeout(60, TimeUnit.SECONDS); builder.readTimeout(
-                    60,
-                    TimeUnit.SECONDS
-                );
-                builder.writeTimeout(60, TimeUnit.SECONDS);
-                val client = builder.build();
-                val mediaType = "application/json".toMediaTypeOrNull()
 
                 var body = RequestBody.create(
                     mediaType,
@@ -128,19 +149,25 @@ class ScheduleActivity : AppCompatActivity() {
                     ).toString()
                 )
                 val request = Request.Builder()
-                    .url("http://192.168.1.102:3005/addresses/q2")
+                    .url("http://192.168.1.102:3001/addresses/q2/1")
                     .post(body)
-                    .addHeader("Content-Type", "application/json")
-                    .addHeader("User-Agent", "insomnia/8.3.0")
                     .build()
                 val response = client.newCall(request).execute()
-
+                val body2:String = response.body.toString()
                 runOnUiThread(Runnable {
-                    val body = response.body
+                    val body:String = response.body.toString()
                     val builder = GsonBuilder()
-                    val listType = object : TypeToken<ArrayList<DTO?>?>() {}.type
-                    val list: ArrayList<DTO> = builder.create().fromJson(body!!.string(), listType)
-                    val pointList = getPointList()
+                        val listType = object : TypeToken<ArrayList<DTO?>>() {}.type
+                        val list: ArrayList<DTO> = Gson().fromJson(body, listType)
+                    val pointList: MutableList<Point>  = mutableListOf()
+                    var i:Float = 1f
+                    var j:Float = 1f
+                    list.forEach{
+                        pointList.add(
+                            Point(x = i++,
+                                y = j++)
+                        )
+                    }
                     val getMax = getMax(pointList)
                     val getMin = getMin(pointList)
                     setContent {

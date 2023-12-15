@@ -100,15 +100,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pressureEditTextNumber" />
 
-    <ListView
-        android:id="@+id/listPressureListView"
-        style="@style/TextAppearance.AppCompat.Body1"
-        android:layout_width="409dp"
-        android:layout_height="0dp"
+    <Button
+        android:id="@+id/listActivityButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="255dp"
+        android:layout_marginTop="93dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="6dp"
+        android:backgroundTint="@color/material_dynamic_primary10"
+        android:onClick="getListActivity"
+        android:text="Лист показаний"
+        android:textAppearance="@style/TextAppearance.AppCompat"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sentTextView"
-        app:layout_constraintVertical_bias="0.502" />
+        app:layout_constraintTop_toBottomOf="@+id/sentImageButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
