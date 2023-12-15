@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     false
                 }
                 pressureEditTextNumber=findViewById(R.id.pressureEditTextNumber)
-                val dto:DTO= DTO(pressureEditTextNumber.text.toString(),r)
+                val dto:DTO= DTO(1,pressureEditTextNumber.text.toString(),r)
                 var body = RequestBody.create(
                     mediaType,
                     JSONObject(

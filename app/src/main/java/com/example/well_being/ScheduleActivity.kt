@@ -50,9 +50,6 @@ class ScheduleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule)
         sendData()
-        val pointList = getPointList()
-        val getMax = getMax(pointList)
-        val getMin = getMin(pointList)
     }
 
 
@@ -61,75 +58,6 @@ class ScheduleActivity : AppCompatActivity() {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
         val mediaType = "application/json".toMediaTypeOrNull()
-        val retrofit = Retrofit.Builder().baseUrl("http://192.168.1.102:3001")
-            .addConverterFactory(GsonConverterFactory.create()).build()
-        val dtoApi = retrofit.create(DTOApi::class.java)
-        CoroutineScope(Dispatchers.IO).launch {
-            val dto = dtoApi.getDTO()
-            val dto2 = DTO("1234",false)
-            runOnUiThread {
-//                            val body:String = response.body.toString()
-//                            val builder = GsonBuilder()
-//                            val listType = object : TypeToken<ArrayList<DTO?>>() {}.type
-//                            val list: ArrayList<DTO> = Gson().fromJson(body, listType)
-//                            val pointList: MutableList<Point>  = mutableListOf()
-//                            var i:Float = 1f
-//                            var j:Float = 1f
-//                            list.forEach{
-//                                pointList.add(
-//                                    Point(x = i++,
-//                                        y = j++)
-//                                )
-//                            }
-                val pointList = getPointList()
-                val getMax = getMax(pointList)
-                val getMin = getMin(pointList)
-                setContent {
-                    val xAxisData = AxisData.Builder()
-                        .axisStepSize(100.dp)
-                        .backgroundColor(Color.Transparent)
-                        .steps(pointList.size - 1)
-                        .labelData { i -> i.toString() }
-                        .labelAndAxisLinePadding(15.dp)
-                        .build()
-
-                    val yAxisData = AxisData.Builder()
-                        .steps(steps)
-                        .backgroundColor(Color.White)
-                        .labelAndAxisLinePadding(20.dp)
-                        .labelData { i ->
-                            val yScale = (getMax - getMin) / steps.toFloat()
-                            String.format("%.1f", ((i * yScale) + getMin))
-                        }.build()
-                    WellbeingTheme {
-                        val lineChartData = LineChartData(
-                            linePlotData = LinePlotData(
-                                lines = listOf(
-                                    Line(
-                                        dataPoints = pointList,
-                                        LineStyle(color = Color.Green, width = 2.0f),
-                                        IntersectionPoint(color = Color.Blue, radius = 4.dp),
-                                        SelectionHighlightPoint(color = Color.Red),
-                                        ShadowUnderLine(color = Color.Gray),
-                                        SelectionHighlightPopUp()
-                                    )
-                                ),
-                            ),
-                            xAxisData = xAxisData,
-                            yAxisData = yAxisData,
-                            gridLines = GridLines(),
-                            backgroundColor = Color.White
-                        )
-                        LineChart(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(300.dp),
-                            lineChartData = lineChartData
-                        )
-                    }
-                }
-            }
-        }
         val thread = Thread(Runnable {
             try {
                 val currentDate = Date()
@@ -137,7 +65,6 @@ class ScheduleActivity : AppCompatActivity() {
                 val dateText: String = dateFormat.format(currentDate)
                 val timeFormat: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
                 val timeText: String = timeFormat.format(currentDate)
-
                 var body = RequestBody.create(
                     mediaType,
                     JSONObject(
@@ -153,29 +80,21 @@ class ScheduleActivity : AppCompatActivity() {
                     .post(body)
                     .build()
                 val response = client.newCall(request).execute()
-                val body2:String = response.body.toString()
                 runOnUiThread(Runnable {
-                    val body:String = response.body.toString()
+                    val body: String = response.peekBody(2048).string()
                     val builder = GsonBuilder()
-                        val listType = object : TypeToken<ArrayList<DTO?>>() {}.type
-                        val list: ArrayList<DTO> = Gson().fromJson(body, listType)
-                    val pointList: MutableList<Point>  = mutableListOf()
-                    var i:Float = 1f
-                    var j:Float = 1f
-                    list.forEach{
-                        pointList.add(
-                            Point(x = i++,
-                                y = j++)
-                        )
-                    }
+                    val listType = object : TypeToken<ArrayList<DTO?>>() {}.type
+                    val list: ArrayList<DTO> = Gson().fromJson(body, listType)
+                    var pointList: MutableList<Point>  = mutableListOf()
+                    pointList=getPointList(list)
                     val getMax = getMax(pointList)
                     val getMin = getMin(pointList)
                     setContent {
                         val xAxisData = AxisData.Builder()
                             .axisStepSize(100.dp)
                             .backgroundColor(Color.Transparent)
-                            .steps(pointList.size - 1)
-                            .labelData { i -> i.toString() }
+                            .steps(pointList.size)
+                            .labelData { i -> (i+1).toString() }
                             .labelAndAxisLinePadding(15.dp)
                             .build()
 
@@ -222,12 +141,11 @@ class ScheduleActivity : AppCompatActivity() {
         thread.start()
     }
 
-    fun getPointList(): List<Point> {
+    fun getPointList(listDTO: ArrayList<DTO>): MutableList<Point> {
         val list = ArrayList<Point>()
-        for (i in 0..31) {
-            list.add(
-                Point(i.toFloat(), Random.nextInt(50, 90).toFloat())
-            )
+
+        listDTO.forEach{
+            dto -> list.add(Point(dto.id.toFloat(),dto.pressure.toFloat()))
         }
         return list
     }
