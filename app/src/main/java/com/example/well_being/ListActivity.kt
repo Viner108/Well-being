@@ -7,6 +7,8 @@ import co.yml.charts.common.model.Point
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -53,19 +55,17 @@ class ListActivity : AppCompatActivity() {
                 val dateText: String = dateFormat.format(currentDate)
                 val timeFormat: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
                 val timeText: String = timeFormat.format(currentDate)
-                var body = RequestBody.create(
-                    mediaType,
-                    JSONObject(
-                        mapOf(
-                            "data " + "${dateText}" to mapOf(
-                                "time " + "${timeText}" to "pressure " + ""
-                            )
-                        )
-                    ).toString()
-                )
+                val dto:DTO= DTO(1,"100","10")
+
+                val urlBuilder: HttpUrl.Builder = ("http://192.168.1.102:8080/android/getDTO").toHttpUrlOrNull()!!.newBuilder()
+                urlBuilder.addQueryParameter("pressure", dto.pressure)
+                urlBuilder.addQueryParameter("headAche", dto.headAche)
+
+                val url: String = urlBuilder.build().toString()
+
                 val request = Request.Builder()
-                    .url("http://192.168.1.102:3001/addresses/q2/1")
-                    .post(body)
+                    .url(url)
+                    .get()
                     .build()
                 val response = client.newCall(request).execute()
                 runOnUiThread(Runnable {

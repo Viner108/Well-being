@@ -7,6 +7,7 @@
     android:background="@color/material_dynamic_primary50"
     tools:context=".MainActivity">
 
+
     <TextView
         android:id="@+id/pressureTextView"
         android:layout_width="wrap_content"
@@ -16,50 +17,31 @@
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/pressureEditTextNumber"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headAcheCheckBox" />
+        app:layout_constraintTop_toBottomOf="@+id/headAcheEditTextNumber" />
 
     <TextView
         android:id="@+id/headAcheTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Болит ли у вас сейчас голова?"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/headAcheCheckBox"
+        app:layout_constraintBottom_toTopOf="@+id/headAcheEditTextNumber"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <CheckBox
-        android:id="@+id/headAcheCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:buttonTint="@color/black"
-        android:text="Болит"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/pressureTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headAcheTextView" />
-
     <EditText
         android:id="@+id/pressureEditTextNumber"
-        style="@style/TextAppearance.AppCompat.Body1"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
         android:ems="10"
         android:hint="Введите число"
         android:inputType="number"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/sentImageButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pressureTextView" />
 
@@ -67,10 +49,12 @@
         android:id="@+id/sentTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
         android:text="Не отправлено"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.544"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sentImageButton" />
 
@@ -79,11 +63,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="302dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="9dp"
         android:backgroundTint="@color/material_dynamic_primary10"
         android:onClick="getSchedule"
         android:text="График"
-        app:layout_constraintBottom_toTopOf="@+id/headAcheTextView"
+        app:layout_constraintBottom_toTopOf="@+id/listActivityButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -104,16 +89,28 @@
         android:id="@+id/listActivityButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="255dp"
-        android:layout_marginTop="93dp"
+        android:layout_marginStart="250dp"
         android:layout_marginEnd="2dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="8dp"
         android:backgroundTint="@color/material_dynamic_primary10"
         android:onClick="getListActivity"
         android:text="Лист показаний"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/headAcheTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sentImageButton" />
+        app:layout_constraintTop_toBottomOf="@+id/graphButton" />
+
+    <EditText
+        android:id="@+id/headAcheEditTextNumber"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="Введите число от 1 до 10"
+        android:inputType="number"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/pressureTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headAcheTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

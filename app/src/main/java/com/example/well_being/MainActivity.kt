@@ -1,27 +1,20 @@
 package com.example.well_being
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
 import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.view.View
-import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.ComponentActivity
-import com.example.well_being.productTest.ProductApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.json.JSONObject
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -31,10 +24,11 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
     private lateinit var sentImageButton: ImageButton
-    private lateinit var headAcheCheckBox: CheckBox
+    private lateinit var headAcheEditTextNumber: EditText
     private lateinit var sentTextView: TextView
     private lateinit var pressureEditTextNumber: EditText
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,7 +36,7 @@ class MainActivity : ComponentActivity() {
         StrictMode.setThreadPolicy(policy)
         sentImageButton = findViewById(R.id.sentImageButton)
         pressureEditTextNumber = findViewById(R.id.pressureEditTextNumber)
-        headAcheCheckBox = findViewById(R.id.headAcheCheckBox)
+        headAcheEditTextNumber = findViewById(R.id.headAcheEditTextNumber)
     }
 
     fun sendData(view: View) {
@@ -61,26 +55,17 @@ class MainActivity : ComponentActivity() {
                 builder.writeTimeout(60, TimeUnit.SECONDS);
                 val client = builder.build();
                 val mediaType = "application/json".toMediaTypeOrNull()
-                var r = if (headAcheCheckBox.isChecked) {
-                    true
-                } else {
-                    false
-                }
                 pressureEditTextNumber=findViewById(R.id.pressureEditTextNumber)
-                val dto:DTO= DTO(1,pressureEditTextNumber.text.toString(),r)
+                val dto:DTO= DTO(1,pressureEditTextNumber.text.toString(),headAcheEditTextNumber.text.toString())
+                val jo = JSONObject()
+                jo.put("pressure",pressureEditTextNumber.text.toString())
+                jo.put("headAche",headAcheEditTextNumber.text.toString())
                 var body = RequestBody.create(
                     mediaType,
-                    JSONObject(
-                        mapOf(
-                            "data " + "${dateText}" to mapOf(
-                                "time " + "${timeText}" to "pressure " + "${pressureEditTextNumber.text}",
-                                "headache" to r.toString()
-                            )
-                        )
-                    ).toString()
+                    jo.toString()
                 )
                 val request = Request.Builder()
-                    .url("http://192.168.1.102:3001/addresses/q1/2")
+                    .url("http://192.168.1.102:8080/android/postDTO")
                     .post(body)
                     .addHeader("Content-Type", "application/json")
                     .addHeader("User-Agent", "insomnia/8.3.0")
