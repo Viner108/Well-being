@@ -12,9 +12,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONObject
 import java.io.IOException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -25,7 +23,7 @@ import java.util.Locale
 class ListActivity : AppCompatActivity() {
 
     private lateinit var listPressureListView: ListView
-    private val arrayPressure: MutableList<DTO> = mutableListOf()
+    private val arrayPressure: MutableList<UserHealthDto> = mutableListOf()
     private lateinit var adapter: DTOAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +33,7 @@ class ListActivity : AppCompatActivity() {
         listPressureListView.setOnItemClickListener { adapterView, view, i, l ->
 //            val text = listPressureListView.getItemAtPosition(i).toString()
 //            adapter.remove(text)
- //           Toast.makeText(this, "Удалена запись: $text", Toast.LENGTH_LONG).show()
+            //           Toast.makeText(this, "Удалена запись: $text", Toast.LENGTH_LONG).show()
         }
         listPressureListView.adapter = adapter
         val pressureEditTextNumber: String = ""
@@ -50,19 +48,12 @@ class ListActivity : AppCompatActivity() {
         val mediaType = "application/json".toMediaTypeOrNull()
         val thread = Thread(Runnable {
             try {
-                val currentDate = Date()
-                val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-                val dateText: String = dateFormat.format(currentDate)
-                val timeFormat: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-                val timeText: String = timeFormat.format(currentDate)
-                val dto:DTO= DTO(1,"100","10")
-
-                val urlBuilder: HttpUrl.Builder = ("http://192.168.1.102:8080/android/getDTO").toHttpUrlOrNull()!!.newBuilder()
-                urlBuilder.addQueryParameter("pressure", dto.pressure)
-                urlBuilder.addQueryParameter("headAche", dto.headAche)
-
+                val urlBuilder: HttpUrl.Builder =
+                    ("http://192.168.1.102:8080/android/findByUserId/${userId}").toHttpUrlOrNull()!!
+                        .newBuilder()
+//                urlBuilder.addQueryParameter("pressure", userHealthDto.pressure)
+//                urlBuilder.addQueryParameter("headAche", userHealthDto.headAche)
                 val url: String = urlBuilder.build().toString()
-
                 val request = Request.Builder()
                     .url(url)
                     .get()
@@ -71,10 +62,9 @@ class ListActivity : AppCompatActivity() {
                 runOnUiThread(Runnable {
                     val body: String = response.peekBody(2048).string()
                     val builder = GsonBuilder()
-                    val listType = object : TypeToken<ArrayList<DTO?>>() {}.type
-                    val list: ArrayList<DTO> = Gson().fromJson(body, listType)
-                    var pointList: MutableList<Point> = mutableListOf()
-                    adapter.list=list
+                    val listType = object : TypeToken<ArrayList<UserHealthDto?>>() {}.type
+                    val list: ArrayList<UserHealthDto> = Gson().fromJson(body, listType)
+                    adapter.list = list
                     adapter.notifyDataSetChanged()
 
                 })

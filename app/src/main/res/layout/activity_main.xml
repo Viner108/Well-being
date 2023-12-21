@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_dynamic_primary50"
+    android:background="@color/material_dynamic_primary70"
     tools:context=".MainActivity">
 
 
@@ -29,6 +29,7 @@
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/headAcheEditTextNumber"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.536"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,10 +37,12 @@
         android:id="@+id/pressureEditTextNumber"
         android:layout_width="250dp"
         android:layout_height="50dp"
+        android:backgroundTint="@color/black"
         android:ems="10"
         android:hint="Введите число"
         android:inputType="number"
         android:textColor="@color/black"
+        android:textColorHint="@color/cardview_dark_background"
         app:layout_constraintBottom_toTopOf="@+id/sentImageButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,11 +68,13 @@
         android:layout_marginStart="302dp"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="9dp"
-        android:backgroundTint="@color/material_dynamic_primary10"
+        android:backgroundTint="@android:color/holo_red_light"
         android:onClick="getSchedule"
         android:text="График"
+        app:cornerRadius="30sp"
         app:layout_constraintBottom_toTopOf="@+id/listActivityButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,6 +83,7 @@
         android:layout_width="361dp"
         android:layout_height="60dp"
         android:autofillHints="1"
+        android:backgroundTint="@color/purple_200"
         android:onClick="sendData"
         android:src="@android:drawable/ic_dialog_email"
         app:layout_constraintBottom_toTopOf="@+id/sentTextView"
@@ -92,12 +98,14 @@
         android:layout_marginStart="250dp"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/material_dynamic_primary10"
+        android:backgroundTint="@android:color/holo_green_dark"
         android:onClick="getListActivity"
         android:text="Лист показаний"
         android:textAppearance="@style/TextAppearance.AppCompat"
+        app:cornerRadius="30sp"
         app:layout_constraintBottom_toTopOf="@+id/headAcheTextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graphButton" />
 
@@ -105,12 +113,34 @@
         android:id="@+id/headAcheEditTextNumber"
         android:layout_width="250dp"
         android:layout_height="50dp"
+        android:backgroundTint="@color/black"
         android:ems="10"
         android:hint="Введите число от 1 до 10"
         android:inputType="number"
         android:textColor="@color/black"
+        android:textColorHint="@color/cardview_dark_background"
         app:layout_constraintBottom_toTopOf="@+id/pressureTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headAcheTextView" />
+
+    <Button
+        android:id="@+id/deleteByUserId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="18dp"
+        android:backgroundTint="?android:attr/colorPressedHighlight"
+        android:onClick="deleteByUserId"
+        android:text="Удаление пользователя"
+        app:cornerRadius="30sp"
+        app:icon="@android:drawable/ic_menu_delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sentImageButton"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

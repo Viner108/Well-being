@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
+import android.provider.AlarmClock
 import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -21,7 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-
+const val userId = 2
 class MainActivity : ComponentActivity() {
     private lateinit var sentImageButton: ImageButton
     private lateinit var headAcheEditTextNumber: EditText
@@ -43,7 +45,7 @@ class MainActivity : ComponentActivity() {
         val thread = Thread(Runnable {
             try {
                 val currentDate = Date()
-                val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                val dateFormat: DateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
                 val dateText: String = dateFormat.format(currentDate)
                 val timeFormat: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
                 val timeText: String = timeFormat.format(currentDate)
@@ -56,10 +58,12 @@ class MainActivity : ComponentActivity() {
                 val client = builder.build();
                 val mediaType = "application/json".toMediaTypeOrNull()
                 pressureEditTextNumber=findViewById(R.id.pressureEditTextNumber)
-                val dto:DTO= DTO(1,pressureEditTextNumber.text.toString(),headAcheEditTextNumber.text.toString())
+                val userHealthDto:UserHealthDto= UserHealthDto(userId,pressureEditTextNumber.text.toString(),headAcheEditTextNumber.text.toString())
                 val jo = JSONObject()
-                jo.put("pressure",pressureEditTextNumber.text.toString())
-                jo.put("headAche",headAcheEditTextNumber.text.toString())
+                jo.put("userId",userHealthDto.userId)
+                jo.put("pressure",userHealthDto.pressure)
+                jo.put("headAche",userHealthDto.headAche)
+                jo.put("date",dateText.toString())
                 var body = RequestBody.create(
                     mediaType,
                     jo.toString()
@@ -82,11 +86,31 @@ class MainActivity : ComponentActivity() {
         })
         thread.start()
     }
+    fun deleteByUserId(view: View) {
+        val thread = Thread(Runnable {
+            try {
+                val builder: OkHttpClient.Builder = OkHttpClient.Builder()
+                val client = builder.build();
+                val request = Request.Builder()
+                    .url("http://192.168.1.102:8080/android/deleteById/${userId}")
+                    .delete()
+                    .build()
+                val response = client.newCall(request).execute()
+                runOnUiThread(Runnable {
+                    showText("Удалены все записи данного пользователя")
+                })
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        })
+        thread.start()
+    }
+    fun showText(string: String){
+        Toast.makeText(this,string,Toast.LENGTH_LONG).show()
+    }
 
     fun getSchedule(view: View) {
-        val intent: Intent = Intent(this, ScheduleActivity::class.java)
-        val message = pressureEditTextNumber.text.toString()
-        intent.putExtra(EXTRA_MESSAGE, message)
+        val intent: Intent = Intent(this, DateActivity::class.java)
         startActivity(intent)
     }
     fun getListActivity(view: View) {

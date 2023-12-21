@@ -5,12 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Button
 import android.widget.TextView
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.IOException
 
 
 class DTOAdapter(context: Context) : BaseAdapter() {
     private var inflater: LayoutInflater? = null
-    var list: List<DTO>? = null
+    var list: List<UserHealthDto>? = null
 
     init {
         inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -20,7 +24,7 @@ class DTOAdapter(context: Context) : BaseAdapter() {
         return list?.size ?: 0
     }
 
-    override fun getItem(position: Int): DTO? {
+    override fun getItem(position: Int): UserHealthDto? {
         return list?.get(position)
     }
 
@@ -36,8 +40,26 @@ class DTOAdapter(context: Context) : BaseAdapter() {
         }
         val pressureText = vi.findViewById<View>(R.id.pressureTextView) as TextView
         val headAcheText = vi.findViewById<View>(R.id.headAcheTextView) as TextView
+        val deteleBotton = vi.findViewById<View>(R.id.deleteButton) as Button
+        deteleBotton.setOnClickListener{
+            val thread = Thread(Runnable {
+                try {
+                    val builder: OkHttpClient.Builder = OkHttpClient.Builder()
+                    val client = builder.build();
+                    val request = Request.Builder()
+                        .url("http://192.168.1.102:8080/android/deleteById/${userId}")
+                        .delete()
+                        .build()
+                    val response = client.newCall(request).execute()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            })
+            thread.start()
+        }
         pressureText.setText(list!![position].pressure);
         headAcheText.setText(list!![position].headAche.toString());
         return vi;
     }
+
 }

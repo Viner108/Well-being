@@ -6,17 +6,31 @@
     android:orientation="horizontal"
     tools:ignore="MissingDefaultResource">
 
-    <TextView android:layout_width="wrap_content"
+    <TextView
         android:id="@+id/pressureTextView"
-        android:layout_height="@dimen/fab_margin"
-        android:text="Header"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50sp"
+        android:layout_marginEnd="20sp"
+        android:text="Header"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/headAcheTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Header"/>
+        android:layout_marginStart="20sp"
+        android:layout_marginEnd="20sp"
+        android:text="Header"
+        android:textSize="30sp" />
 
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="delete"
+        android:text="Удалить" />
 
 
 </LinearLayout>
