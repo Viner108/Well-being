@@ -7,6 +7,7 @@ import android.os.StrictMode
 import android.provider.AlarmClock
 import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
@@ -29,6 +30,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var headAcheEditTextNumber: EditText
     private lateinit var sentTextView: TextView
     private lateinit var pressureEditTextNumber: EditText
+    private lateinit var graphButton: Button
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +41,13 @@ class MainActivity : ComponentActivity() {
         sentImageButton = findViewById(R.id.sentImageButton)
         pressureEditTextNumber = findViewById(R.id.pressureEditTextNumber)
         headAcheEditTextNumber = findViewById(R.id.headAcheEditTextNumber)
+        graphButton=findViewById(R.id.graphButton)
+        graphButton.setOnClickListener{
+            val intent: Intent = Intent(this, GetDateActivity::class.java)
+            val message = pressureEditTextNumber.text.toString()
+            intent.putExtra(EXTRA_MESSAGE, message)
+            startActivity(intent)
+        }
     }
 
     fun sendData(view: View) {
@@ -58,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 val client = builder.build();
                 val mediaType = "application/json".toMediaTypeOrNull()
                 pressureEditTextNumber=findViewById(R.id.pressureEditTextNumber)
-                val userHealthDto:UserHealthDto= UserHealthDto(userId,pressureEditTextNumber.text.toString(),headAcheEditTextNumber.text.toString())
+                val userHealthDto:UserHealthDto= UserHealthDto(1,userId,pressureEditTextNumber.text.toString(),headAcheEditTextNumber.text.toString(),dateText.toString())
                 val jo = JSONObject()
                 jo.put("userId",userHealthDto.userId)
                 jo.put("pressure",userHealthDto.pressure)
@@ -110,7 +119,9 @@ class MainActivity : ComponentActivity() {
     }
 
     fun getSchedule(view: View) {
-        val intent: Intent = Intent(this, DateActivity::class.java)
+        val intent: Intent = Intent(this, GetDateActivity::class.java)
+        val message = pressureEditTextNumber.text.toString()
+        intent.putExtra(EXTRA_MESSAGE, message)
         startActivity(intent)
     }
     fun getListActivity(view: View) {

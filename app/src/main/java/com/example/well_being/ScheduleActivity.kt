@@ -32,6 +32,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
+import java.time.LocalDate
+import java.time.Period
+
+import java.time.format.DateTimeFormatter
+
+
+
 
 const val steps = 10
 
@@ -61,7 +68,7 @@ class ScheduleActivity : AppCompatActivity() {
         val thread = Thread(Runnable {
             try {
                 val urlBuilder: HttpUrl.Builder =
-                    ("http://192.168.1.102:8080/android/findByDate/${beforeDateEditText}/${beforeDateEditText}").toHttpUrlOrNull()!!
+                    ("http://192.168.1.102:8080/android/findByDate/${beforeDateEditText}/${afterDateEditText}").toHttpUrlOrNull()!!
                         .newBuilder()
 //                urlBuilder.addQueryParameter("pressure", userHealthDto.pressure)
 //                urlBuilder.addQueryParameter("headAche", userHealthDto.headAche)
@@ -85,7 +92,14 @@ class ScheduleActivity : AppCompatActivity() {
                             .axisStepSize(100.dp)
                             .backgroundColor(Color.Transparent)
                             .steps(pointList.size)
-                            .labelData { i -> (i+1).toString() }
+                            .labelData { i ->
+                                val format = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                                val beforeDate = LocalDate.parse(beforeDateEditText, format)
+                                val afterDate = LocalDate.parse(afterDateEditText, format)
+                                val period=Period.between(beforeDate,afterDate)
+                                val yScale = (afterDate.dayOfYear-beforeDate.dayOfYear).toFloat()
+                                String.format("${beforeDate.month.value}.${i+beforeDate.dayOfMonth}", ((i+yScale)))
+                            }
                             .labelAndAxisLinePadding(15.dp)
                             .build()
 
@@ -94,8 +108,8 @@ class ScheduleActivity : AppCompatActivity() {
                             .backgroundColor(Color.White)
                             .labelAndAxisLinePadding(20.dp)
                             .labelData { i ->
-                                val yScale = (getMax - getMin) / steps.toFloat()
-                                String.format("%.1f", ((i * yScale) + getMin))
+                                val xScale = (getMax - getMin)/ steps.toFloat()
+                                String.format("%.1f", ((i * xScale) + getMin))
                             }.build()
                         WellbeingTheme {
                             val lineChartData = LineChartData(
@@ -135,9 +149,11 @@ class ScheduleActivity : AppCompatActivity() {
 
     fun getPointList(listUserHealthDto: ArrayList<UserHealthDto>): MutableList<Point> {
         val list = ArrayList<Point>()
-
-        listUserHealthDto.forEach{
-            dto -> list.add(Point(dto.userId.toFloat(),dto.pressure.toFloat()))
+        val listSortUserHealthDto=bubbleSort(listUserHealthDto)
+        listSortUserHealthDto.forEach{
+            dto ->val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val date = LocalDate.parse(dto.date, format)
+            list.add(Point(date.dayOfYear.toFloat(),dto.pressure.toFloat()))
         }
         return list
     }
@@ -151,11 +167,28 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private fun getMin(list: List<Point>): Float {
-        var min = 100F
+        var min = 1000F
         list.forEach { point ->
             if (min > point.y) min = point.y
         }
         return min
+    }
+    fun bubbleSort(listUserHealthDto: ArrayList<UserHealthDto>): ArrayList<UserHealthDto> {
+        val n = listUserHealthDto.size
+        for (i in 0 until n - 1) {
+            for (j in 0 until n - i - 1) {
+                val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                val date1 = LocalDate.parse(listUserHealthDto[j].date, format)
+                val date2 = LocalDate.parse(listUserHealthDto[j+1].date, format)
+                if (date1 > date2) {
+                    // Swap the elements
+                    val temp = listUserHealthDto[j]
+                    listUserHealthDto[j] = listUserHealthDto[j + 1]
+                    listUserHealthDto[j + 1] = temp
+                }
+            }
+        }
+        return listUserHealthDto
     }
 
 }

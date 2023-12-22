@@ -55,7 +55,7 @@
                 android:ems="10"
                 android:gravity="center"
                 android:inputType="text"
-                android:text="Календарь"
+                android:text="2023.12.14"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toTopOf="@+id/afterDateTextView"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -86,14 +86,14 @@
                 android:ems="10"
                 android:gravity="center"
                 android:inputType="text"
-                android:text="Календарь"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.506"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/afterDateTextView"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_bias="1.0"
+                android:text="2023.12.17" />
 
             <Button
                 android:id="@+id/getGrahpic"
@@ -109,6 +109,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/afterDateEditText" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

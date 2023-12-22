@@ -44,4 +44,5 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="title_activity_list_activir">ListActivir</string>
+    <string name="title_activity_get_date">GetDateActivity</string>
 </resources>
