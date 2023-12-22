@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -7,17 +8,25 @@
     tools:ignore="MissingDefaultResource">
 
     <TextView
+        android:id="@+id/idRow"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:layout_weight="1"
+        android:text="."
+        android:textSize="15sp" />
+
+    <TextView
         android:id="@+id/pressureTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="63dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30sp"
-        android:layout_marginEnd="50sp"
+        android:layout_marginEnd="20sp"
         android:text="Header"
         android:textSize="30sp" />
 
     <TextView
         android:id="@+id/headAcheTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="63dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40sp"
         android:layout_marginEnd="20sp"
@@ -26,11 +35,29 @@
 
     <Button
         android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
+        android:layout_width="65dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5sp"
-        android:onClick="delete"
-        android:text="Удалить" />
+        android:layout_marginStart="10dp"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:text="."
+        android:textColor="@android:color/holo_red_dark"
+        app:icon="@android:drawable/ic_menu_delete"
+        app:iconGravity="start|end"
+        app:iconSize="20sp"
+        app:iconTint="@color/white" />
+
+    <Button
+        android:id="@+id/updateButton"
+        android:layout_width="62dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:text="."
+        android:textColor="@android:color/holo_green_light"
+        app:icon="@android:drawable/ic_menu_edit"
+        app:iconGravity="start|end"
+        app:iconSize="20sp"
+        app:iconTint="@color/white" />
+
 
 
 </LinearLayout>

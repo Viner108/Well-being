@@ -25,6 +25,15 @@ class DTOAdapter(context: Context) : BaseAdapter() {
     override fun getCount(): Int {
         return list?.size ?: 0
     }
+    fun Button(convertView: View?): Button {
+        val vi: View = if (convertView == null) {
+            inflater!!.inflate(R.layout.health_data_item, null)
+        } else {
+            convertView
+        }
+        val updateButton = vi.findViewById<View>(R.id.updateButton) as Button
+        return updateButton
+    }
 
     override fun getItem(position: Int): UserHealthDto? {
         return list?.get(position)
@@ -42,12 +51,14 @@ class DTOAdapter(context: Context) : BaseAdapter() {
         }
         val pressureText = vi.findViewById<View>(R.id.pressureTextView) as TextView
         val headAcheText = vi.findViewById<View>(R.id.headAcheTextView) as TextView
-        val deteleBotton = vi.findViewById<View>(R.id.deleteButton) as Button
+        val idRow = vi.findViewById<View>(R.id.idRow) as TextView
+        val deteleButton = vi.findViewById<View>(R.id.deleteButton) as Button
+        val updateButton = vi.findViewById<View>(R.id.updateButton) as Button
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
         val mediaType = "application/json".toMediaTypeOrNull()
-        deteleBotton.setOnClickListener{
+        deteleButton.setOnClickListener{
             val thread = Thread(Runnable {
                 try {
                     val builder: OkHttpClient.Builder = OkHttpClient.Builder()
@@ -63,8 +74,11 @@ class DTOAdapter(context: Context) : BaseAdapter() {
             })
             thread.start()
         }
-        pressureText.setText(list!![position].pressure);
-        headAcheText.setText(list!![position].headAche);
+//        updateButton.setOnClickListener{
+//        }
+        idRow.setText(list!![position].id.toString())
+        pressureText.setText(list!![position].pressure)
+        headAcheText.setText(list!![position].headAche)
         return vi;
     }
 
