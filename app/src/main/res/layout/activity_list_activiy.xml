@@ -10,13 +10,56 @@
     <ListView
         android:id="@+id/listPressureListView"
         style="@style/TextAppearance.AppCompat.Body1"
-        android:layout_width="409dp"
-        android:layout_height="0dp"
+        android:layout_width="406dp"
+        android:layout_height="522dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.502" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="20dp"
+        android:text="Перезагрузить таблицу"
+        android:onClick="RestartTable"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listPressureListView" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="122dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="62dp"
+        android:text="Давление"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/listPressureListView"
+        app:layout_constraintEnd_toStartOf="@+id/textView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="128dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="161dp"
+        android:layout_marginBottom="60dp"
+        android:text="Головная боль"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/listPressureListView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

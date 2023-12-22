@@ -1,6 +1,7 @@
 package com.example.well_being
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import co.yml.charts.common.model.Point
@@ -73,5 +74,12 @@ class ListActivity : AppCompatActivity() {
             }
         })
         thread.start()
+    }
+    fun RestartTable(view: View) {
+        setContentView(R.layout.activity_list_activiy)
+        adapter = DTOAdapter(this)
+        listPressureListView = findViewById(R.id.listPressureListView)
+        listPressureListView.adapter = adapter
+        sendData()
     }
 }
