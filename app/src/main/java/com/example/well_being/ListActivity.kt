@@ -17,6 +17,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.internal.wait
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
 import java.io.IOException
@@ -70,7 +71,7 @@ class ListActivity : AppCompatActivity() {
                     .build()
                 val response = client.newCall(request).execute()
                 runOnUiThread(Runnable {
-                    val body: String = response.peekBody(2048).string()
+                    val body: String = response.peekBody(2097152).string()
                     val builder = GsonBuilder()
                     val listType = object : TypeToken<ArrayList<UserHealthDto?>>() {}.type
                     val list: ArrayList<UserHealthDto> = Gson().fromJson(body, listType)
@@ -83,70 +84,5 @@ class ListActivity : AppCompatActivity() {
             }
         })
         thread.start()
-    }
-
-    fun RestartTable(view: View) {
-        setContentView(R.layout.activity_list_activiy)
-        adapter = DTOAdapter(this)
-        listPressureListView = findViewById(R.id.listPressureListView)
-        listPressureListView.adapter = adapter
-        sendData()
-    }
-
-    @SuppressLint("MissingInflatedId")
-    fun updateData(view: View) {
-        val li = LayoutInflater.from(this)
-        val dialogView: View = li.inflate(R.layout.dialog_about_update_data, null)
-        val alertDialogBuilder = AlertDialog.Builder(
-            this
-        )
-        alertDialogBuilder.setView(dialogView)
-        val idRowEditText = dialogView.findViewById(R.id.idRowEditText) as EditText
-        val pressureUpdate = dialogView.findViewById(R.id.pressureUpdateEditText) as EditText
-        val headAcheUpdate = dialogView.findViewById(R.id.headAcheUpdateEditText) as EditText
-        alertDialogBuilder
-            .setCancelable(false)
-            .setPositiveButton(
-                "OK"
-            ) { dialog, id ->
-                val thread = Thread(Runnable {
-                    try {
-                        val currentDate = Date()
-                        val dateFormat: DateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
-                        val dateText: String = dateFormat.format(currentDate)
-                        val mediaType = "application/json".toMediaTypeOrNull()
-                        val builder: OkHttpClient.Builder = OkHttpClient.Builder()
-                        val client = builder.build();
-                        val jo = JSONObject()
-                        jo.put("userId", userId.toString())
-                        jo.put("pressure",pressureUpdate.text.toString())
-                        jo.put("headAche",headAcheUpdate.text.toString())
-                        jo.put("date",dateText)
-                        var body = RequestBody.create(
-                            mediaType,
-                            jo.toString()
-                        )
-                        val request = Request.Builder()
-                            .url("http://192.168.1.102:8080/android/putUpdateTable/${idRowEditText.text.toString()}")
-                            .put(body)
-                            .build()
-                        val response = client.newCall(request).execute()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
-                })
-                thread.start()
-                setContentView(R.layout.activity_list_activiy)
-                adapter = DTOAdapter(this)
-                listPressureListView = findViewById(R.id.listPressureListView)
-                listPressureListView.adapter = adapter
-                sendData()
-            }
-            .setNegativeButton(
-                "Cancel"
-            ) { dialog, id -> dialog.cancel() }
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
-
     }
 }

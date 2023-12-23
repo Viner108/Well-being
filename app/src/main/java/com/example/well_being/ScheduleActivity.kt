@@ -1,6 +1,7 @@
 package com.example.well_being
 
 import android.os.Bundle
+import android.util.JsonReader
 import android.widget.EditText
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -32,12 +33,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
+import java.io.StringReader
 import java.time.LocalDate
 import java.time.Period
-
 import java.time.format.DateTimeFormatter
-
-
 
 
 const val steps = 10
@@ -79,10 +78,13 @@ class ScheduleActivity : AppCompatActivity() {
                     .build()
                 val response = client.newCall(request).execute()
                     runOnUiThread(Runnable {
-                    val body: String = response.peekBody(2048).string()
+                    val body: String = response.peekBody(524288).string()
                     val builder = GsonBuilder()
                     val listType = object : TypeToken<ArrayList<UserHealthDto?>>() {}.type
-                    val list: ArrayList<UserHealthDto> = Gson().fromJson(body, listType)
+                        val gson = Gson()
+                        val reader = JsonReader(StringReader(body))
+                        reader.setLenient(true)
+                    val list: ArrayList<UserHealthDto> = gson.fromJson(body, listType)
                     var pointList: MutableList<Point>  = mutableListOf()
                     pointList=getPointList(list)
                     val getMax = getMax(pointList)
@@ -93,10 +95,9 @@ class ScheduleActivity : AppCompatActivity() {
                             .backgroundColor(Color.Transparent)
                             .steps(pointList.size)
                             .labelData { i ->
-                                val format = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                                val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                                 val beforeDate = LocalDate.parse(beforeDateEditText, format)
                                 val afterDate = LocalDate.parse(afterDateEditText, format)
-                                val period=Period.between(beforeDate,afterDate)
                                 val yScale = (afterDate.dayOfYear-beforeDate.dayOfYear).toFloat()
                                 String.format("${beforeDate.month.value}.${i+beforeDate.dayOfMonth}", ((i+yScale)))
                             }

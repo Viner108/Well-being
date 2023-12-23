@@ -85,6 +85,15 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.5")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("androidx.paging:paging-runtime:2.1.2")
+    testImplementation("androidx.paging:paging-common:2.1.2")
+    implementation("androidx.paging:paging-rxjava2:2.1.2")
+    implementation ("com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4")
+    // https://mvnrepository.com/artifact/com.chad.library/baserecyclerviewadapter
+    implementation("com.chad.library:baserecyclerviewadapter:1.0.0")
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+
+//    kapt ("com.github.bumptech.glide:compiler:4.11.0")
 
 
 }
