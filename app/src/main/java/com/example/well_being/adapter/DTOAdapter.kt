@@ -1,4 +1,4 @@
-package com.example.well_being
+package com.example.well_being.adapter
 
 import android.app.Activity
 import android.content.Context
@@ -10,6 +10,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.example.well_being.R
+import com.example.well_being.activity.userId
+import com.example.well_being.entity.UserHealthDto
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -57,7 +60,6 @@ class DTOAdapter(context: Context) : BaseAdapter() {
         }
         val pressureText = vi.findViewById<View>(R.id.pressureTextView) as TextView
         val headAcheText = vi.findViewById<View>(R.id.headAcheTextView) as TextView
-        val idRow = vi.findViewById<View>(R.id.idRow) as TextView
         val deteleButton = vi.findViewById<View>(R.id.deleteButton) as Button
         val updateButton = vi.findViewById<View>(R.id.updateButton) as Button
         deteleButton.setOnClickListener {
@@ -71,7 +73,7 @@ class DTOAdapter(context: Context) : BaseAdapter() {
                         .build()
                     val response = client.newCall(request).execute()
                     list!!.removeIf {
-                        it.id == java.lang.Long.valueOf(idRow.text.toString())
+                        it.id == java.lang.Long.valueOf(list!![position].id.toString())
                     }
                     (context as Activity).runOnUiThread(Runnable {
                         notifyDataSetChanged()
@@ -89,7 +91,6 @@ class DTOAdapter(context: Context) : BaseAdapter() {
                 getContext()
             )
             alertDialogBuilder.setView(dialogView)
-            val idRowEditText = dialogView.findViewById(R.id.idRowEditText) as EditText
             val pressureUpdate = dialogView.findViewById(R.id.pressureUpdateEditText) as EditText
             val headAcheUpdate = dialogView.findViewById(R.id.headAcheUpdateEditText) as EditText
             alertDialogBuilder
@@ -117,7 +118,7 @@ class DTOAdapter(context: Context) : BaseAdapter() {
                                 .build()
                             val response = client.newCall(request).execute()
                             list!!.find {
-                                it.id == java.lang.Long.valueOf(idRow.text.toString())
+                                it.id == java.lang.Long.valueOf(list!![position].id.toString())
                             }.also {
                                 it?.pressure = pressureUpdate.text.toString()
                                 it?.headAche = headAcheUpdate.text.toString()
@@ -137,7 +138,6 @@ class DTOAdapter(context: Context) : BaseAdapter() {
             val alertDialog = alertDialogBuilder.create()
             alertDialog.show()
         }
-        idRow.setText(list!![position].id.toString())
         pressureText.setText(list!![position].pressure)
         headAcheText.setText(list!![position].headAche)
         return vi;

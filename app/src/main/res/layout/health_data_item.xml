@@ -2,24 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     tools:ignore="MissingDefaultResource">
 
     <TextView
-        android:id="@+id/idRow"
-        android:layout_width="37dp"
-        android:layout_height="37dp"
-        android:layout_weight="1"
-        android:text="."
-        android:textSize="15sp" />
-
-    <TextView
         android:id="@+id/pressureTextView"
-        android:layout_width="63dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30sp"
+        android:layout_marginStart="20sp"
         android:layout_marginEnd="20sp"
         android:text="Header"
         android:textSize="30sp" />

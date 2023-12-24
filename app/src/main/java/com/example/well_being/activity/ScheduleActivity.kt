@@ -1,4 +1,4 @@
-package com.example.well_being
+package com.example.well_being.activity
 
 import android.os.Bundle
 import android.util.JsonReader
@@ -22,6 +22,8 @@ import co.yml.charts.ui.linechart.model.LineStyle
 import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
+import com.example.well_being.R
+import com.example.well_being.entity.UserHealthDto
 import com.example.well_being.ui.theme.WellbeingTheme
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -35,7 +37,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
 import java.io.StringReader
 import java.time.LocalDate
-import java.time.Period
 import java.time.format.DateTimeFormatter
 
 
@@ -48,68 +49,74 @@ class ScheduleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule)
-//        val arguments = intent.extras.also {
-//            beforeDateEditText= it.getString(beforeDateEditText)
-//        }
-        val bundle:Bundle = intent.extras!!
+        val bundle: Bundle = intent.extras!!
         val beforeDateEditText = bundle.getString("beforeDateEditText").toString()
         val afterDateEditText = bundle.getString("afterDateEditText").toString()
-        sendData(beforeDateEditText,afterDateEditText)
+        sendData(beforeDateEditText, afterDateEditText)
 
     }
 
 
-    fun sendData(beforeDateEditText:String,afterDateEditText:String) {
+    fun sendData(beforeDateEditText: String, afterDateEditText: String) {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
-        val mediaType = "application/json".toMediaTypeOrNull()
         val thread = Thread(Runnable {
             try {
                 val urlBuilder: HttpUrl.Builder =
                     ("http://192.168.1.102:8080/android/findByDate/${beforeDateEditText}/${afterDateEditText}").toHttpUrlOrNull()!!
                         .newBuilder()
-//                urlBuilder.addQueryParameter("pressure", userHealthDto.pressure)
-//                urlBuilder.addQueryParameter("headAche", userHealthDto.headAche)
                 val url: String = urlBuilder.build().toString()
                 val request = Request.Builder()
                     .url(url)
                     .get()
                     .build()
                 val response = client.newCall(request).execute()
-                    runOnUiThread(Runnable {
+                runOnUiThread(Runnable {
                     val body: String = response.peekBody(524288).string()
-                    val builder = GsonBuilder()
                     val listType = object : TypeToken<ArrayList<UserHealthDto?>>() {}.type
-                        val gson = Gson()
-                        val reader = JsonReader(StringReader(body))
-                        reader.setLenient(true)
+                    val gson = Gson()
                     val list: ArrayList<UserHealthDto> = gson.fromJson(body, listType)
-                    var pointList: MutableList<Point>  = mutableListOf()
-                    pointList=getPointList(list)
+                    var pointList: MutableList<Point> = mutableListOf()
+                    pointList = getPointList(list)
                     val getMax = getMax(pointList)
                     val getMin = getMin(pointList)
+                    val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    val beforeDate = LocalDate.parse(beforeDateEditText, format)
+                    val afterDate = LocalDate.parse(afterDateEditText, format)
+                    val date0 = LocalDate.parse(list[0].date, format)
+                    var count: Int = 0
                     setContent {
                         val xAxisData = AxisData.Builder()
-                            .axisStepSize(100.dp)
+                            .axisStepSize(50.dp)
                             .backgroundColor(Color.Transparent)
-                            .steps(pointList.size)
+                            .steps(afterDate.dayOfYear - date0.dayOfYear)
                             .labelData { i ->
-                                val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                                val beforeDate = LocalDate.parse(beforeDateEditText, format)
-                                val afterDate = LocalDate.parse(afterDateEditText, format)
-                                val yScale = (afterDate.dayOfYear-beforeDate.dayOfYear).toFloat()
-                                String.format("${beforeDate.month.value}.${i+beforeDate.dayOfMonth}", ((i+yScale)))
+                                val month = if (i < list.size) LocalDate.parse(
+                                    list[i].date,
+                                    format
+                                ) else LocalDate.parse(list[list.size - 1].date, format)
+                                (if (month.month.value == date0.month.value) {
+                                    String.format(
+                                        "${month.month.value}.${month.dayOfMonth}",
+                                        (i + 1)
+                                    )
+                                } else {
+                                    String.format(
+                                        "${month.month.value}.${i+date0.dayOfMonth-date0.lengthOfMonth()}",
+                                        (i + 1)
+                                    )
+                                }).toString()
                             }
                             .labelAndAxisLinePadding(15.dp)
                             .build()
 
                         val yAxisData = AxisData.Builder()
                             .steps(steps)
-                            .backgroundColor(Color.White)
+                            .backgroundColor(Color.Transparent)
                             .labelAndAxisLinePadding(20.dp)
                             .labelData { i ->
-                                val xScale = (getMax - getMin)/ steps.toFloat()
+                                val xScale = (getMax - getMin) / steps.toFloat()
                                 String.format("%.1f", ((i * xScale) + getMin))
                             }.build()
                         WellbeingTheme {
@@ -150,11 +157,13 @@ class ScheduleActivity : AppCompatActivity() {
 
     fun getPointList(listUserHealthDto: ArrayList<UserHealthDto>): MutableList<Point> {
         val list = ArrayList<Point>()
-        val listSortUserHealthDto=bubbleSort(listUserHealthDto)
-        listSortUserHealthDto.forEach{
-            dto ->val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val listSortUserHealthDto = bubbleSort(listUserHealthDto)
+        listSortUserHealthDto.forEach { dto ->
+            val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val date = LocalDate.parse(dto.date, format)
-            list.add(Point(date.dayOfYear.toFloat(),dto.pressure.toFloat()))
+            val indexOfApostrophe = dto.pressure.indexOf('/')
+            val firstPressure = dto.pressure.substring(0 until indexOfApostrophe)
+            list.add(Point((date.dayOfYear + date.year).toFloat(), firstPressure.toFloat()))
         }
         return list
     }
@@ -174,13 +183,14 @@ class ScheduleActivity : AppCompatActivity() {
         }
         return min
     }
+
     fun bubbleSort(listUserHealthDto: ArrayList<UserHealthDto>): ArrayList<UserHealthDto> {
         val n = listUserHealthDto.size
         for (i in 0 until n - 1) {
             for (j in 0 until n - i - 1) {
                 val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 val date1 = LocalDate.parse(listUserHealthDto[j].date, format)
-                val date2 = LocalDate.parse(listUserHealthDto[j+1].date, format)
+                val date2 = LocalDate.parse(listUserHealthDto[j + 1].date, format)
                 if (date1 > date2) {
                     // Swap the elements
                     val temp = listUserHealthDto[j]
