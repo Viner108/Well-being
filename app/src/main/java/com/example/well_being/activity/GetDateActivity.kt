@@ -22,7 +22,7 @@ class GetDateActivity : AppCompatActivity() {
         getGrahpic=findViewById(R.id.getGrahpic)
     }
     fun getGrahpic(view: View) {
-        val intent: Intent = Intent(this, ScheduleActivity::class.java)
+        val intent: Intent = Intent(this, GraphActivity::class.java)
         intent.putExtra("beforeDateEditText",beforeDateEditText.text.toString())
         intent.putExtra("afterDateEditText",afterDateEditText.text.toString())
         startActivity(intent)

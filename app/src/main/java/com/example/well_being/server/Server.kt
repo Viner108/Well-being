@@ -124,6 +124,7 @@ class Server(context: Context) {
         })
         thread.start()
     }
+
     fun showText(string: String){
         Toast.makeText(context as Activity,string, Toast.LENGTH_LONG).show()
     }

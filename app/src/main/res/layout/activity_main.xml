@@ -4,9 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_dynamic_primary70"
+    android:background="@drawable/background"
     tools:context=".activity.MainActivity">
 
+
+
+    <LinearLayout
+        android:layout_width="406dp"
+        android:layout_height="67dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/headAcheTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/graphButton"
+            android:layout_width="174dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10sp"
+            android:background="@drawable/button_graph"
+            android:text="График"
+            android:textColor="#FFD700" />
+
+        <Button
+            android:id="@+id/listActivityButton"
+            android:layout_width="174dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
+            android:layout_marginTop="10sp"
+            android:background="@drawable/button_list_activity"
+            android:onClick="getListActivity"
+            android:text="Лист показаний"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="#FFD700" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/pressureTextView"
@@ -24,6 +58,7 @@
         android:id="@+id/headAcheTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Болит ли у вас сейчас голова?"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="@color/black"
@@ -48,53 +83,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pressureTextView" />
 
-    <Button
-        android:id="@+id/graphButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="302dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="9dp"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:text="График"
-        app:cornerRadius="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/listActivityButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageButton
         android:id="@+id/sentImageButton"
-        android:layout_width="361dp"
-        android:layout_height="60dp"
+        android:layout_width="310dp"
+        android:layout_height="52dp"
         android:layout_marginBottom="100dp"
         android:autofillHints="1"
-        android:backgroundTint="@color/purple_200"
+        android:background="@drawable/button_send"
         android:onClick="sendData"
         android:src="@android:drawable/ic_dialog_email"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pressureEditTextNumber" />
-
-    <Button
-        android:id="@+id/listActivityButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="250dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="@android:color/holo_green_dark"
-        android:onClick="getListActivity"
-        android:text="Лист показаний"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        app:cornerRadius="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/headAcheTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/graphButton" />
 
     <EditText
         android:id="@+id/headAcheEditTextNumber"
@@ -113,22 +114,19 @@
 
     <Button
         android:id="@+id/deleteByUserId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="280dp"
+        android:layout_width="372dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="112dp"
-        android:layout_marginEnd="2dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="18dp"
-        android:backgroundTint="?android:attr/colorPressedHighlight"
+        android:background="@drawable/button_delete_user"
         android:onClick="deleteByUserId"
         android:text="Удаление пользователя"
-        app:cornerRadius="30sp"
-        app:icon="@android:drawable/ic_menu_delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sentImageButton"
         app:layout_constraintVertical_bias="1.0" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

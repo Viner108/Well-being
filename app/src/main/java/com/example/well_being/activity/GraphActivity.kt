@@ -1,7 +1,6 @@
 package com.example.well_being.activity
 
 import android.os.Bundle
-import android.util.JsonReader
 import android.widget.EditText
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -27,22 +26,19 @@ import com.example.well_being.entity.UserHealthDto
 import com.example.well_being.ui.theme.WellbeingTheme
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
-import java.io.StringReader
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
 const val steps = 10
 
-class ScheduleActivity : AppCompatActivity() {
+class GraphActivity : AppCompatActivity() {
 
     private lateinit var beforeDateEditText: EditText
     private lateinit var afterDateEditText: EditText
@@ -53,7 +49,6 @@ class ScheduleActivity : AppCompatActivity() {
         val beforeDateEditText = bundle.getString("beforeDateEditText").toString()
         val afterDateEditText = bundle.getString("afterDateEditText").toString()
         sendData(beforeDateEditText, afterDateEditText)
-
     }
 
 
