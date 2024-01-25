@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.example.well_being.activity.userId
 import com.example.well_being.adapter.DTOAdapter
 import com.example.well_being.entity.UserHealthDto
+import com.google.android.material.slider.Slider
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import okhttp3.HttpUrl
@@ -61,7 +62,6 @@ class Server(context: Context) {
                     val list: ArrayList<UserHealthDto> = Gson().fromJson(body, listType)
                     adapter.list = list
                     adapter.notifyDataSetChanged()
-
                 })
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -70,7 +70,7 @@ class Server(context: Context) {
         thread.start()
     }
 
-    fun postRequestForMainActivity(pressureEditTextNumber: EditText,headAcheEditTextNumber: EditText) {
+    fun postRequestForMainActivity(pressureEditTextNumber: EditText,headAcheEditTextNumber: EditText,sliderDrowsiness:Slider) {
         val client =client()
         val thread = Thread(Runnable {
             try {
@@ -85,6 +85,7 @@ class Server(context: Context) {
                 jo.put("pressure",pressureEditTextNumber.text.toString())
                 jo.put("headAche",headAcheEditTextNumber.text.toString())
                 jo.put("date",dateText)
+                jo.put("drowsiness",sliderDrowsiness.value.toString())
                 var body = RequestBody.create(
                     mediaType,
                     jo.toString()

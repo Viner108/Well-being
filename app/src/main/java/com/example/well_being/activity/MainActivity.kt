@@ -15,6 +15,7 @@ import androidx.activity.ComponentActivity
 import com.example.well_being.R
 import com.example.well_being.entity.UserHealthDto
 import com.example.well_being.server.Server
+import com.google.android.material.slider.Slider
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var headAcheEditTextNumber: EditText
     private lateinit var pressureEditTextNumber: EditText
     private lateinit var graphButton: Button
+    private lateinit var sliderDrowsiness : Slider
     private val server: Server = Server(this)
 
     @SuppressLint("MissingInflatedId")
@@ -44,6 +46,7 @@ class MainActivity : ComponentActivity() {
         pressureEditTextNumber = findViewById(R.id.pressureEditTextNumber)
         headAcheEditTextNumber = findViewById(R.id.headAcheEditTextNumber)
         graphButton=findViewById(R.id.graphButton)
+        sliderDrowsiness=findViewById(R.id.sliderDrowsiness)
         graphButton.setOnClickListener{
             val intent: Intent = Intent(this, GetDateActivity::class.java)
             startActivity(intent)
@@ -51,7 +54,7 @@ class MainActivity : ComponentActivity() {
     }
 
     fun sendData(view: View) {
-        server.postRequestForMainActivity(pressureEditTextNumber,headAcheEditTextNumber)
+        server.postRequestForMainActivity(pressureEditTextNumber,headAcheEditTextNumber,sliderDrowsiness)
     }
     fun deleteByUserId(view: View) {
         server.deleteRequestForMainActivity()

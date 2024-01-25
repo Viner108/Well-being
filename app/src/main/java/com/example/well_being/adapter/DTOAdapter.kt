@@ -1,5 +1,6 @@
 package com.example.well_being.adapter
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
@@ -52,6 +53,7 @@ class DTOAdapter(context: Context) : BaseAdapter() {
         return position.toLong()
     }
 
+    @SuppressLint("MissingInflatedId")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val vi: View = if (convertView == null) {
             inflater!!.inflate(R.layout.health_data_item, null)
@@ -60,6 +62,7 @@ class DTOAdapter(context: Context) : BaseAdapter() {
         }
         val pressureText = vi.findViewById<View>(R.id.pressureTextView) as TextView
         val headAcheText = vi.findViewById<View>(R.id.headAcheTextView) as TextView
+        val drowsiness = vi.findViewById<View>(R.id.drowsinessTextView) as TextView
         val deteleButton = vi.findViewById<View>(R.id.deleteButton) as Button
         val updateButton = vi.findViewById<View>(R.id.updateButton) as Button
         deteleButton.setOnClickListener {
@@ -93,6 +96,7 @@ class DTOAdapter(context: Context) : BaseAdapter() {
             alertDialogBuilder.setView(dialogView)
             val pressureUpdate = dialogView.findViewById(R.id.pressureUpdateEditText) as EditText
             val headAcheUpdate = dialogView.findViewById(R.id.headAcheUpdateEditText) as EditText
+            val drowsiness = dialogView.findViewById(R.id.drowsinessEditText) as EditText
             alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton(
@@ -108,6 +112,7 @@ class DTOAdapter(context: Context) : BaseAdapter() {
                             jo.put("pressure", pressureUpdate.text.toString())
                             jo.put("headAche", headAcheUpdate.text.toString())
                             jo.put("date", list!![position].date)
+                            jo.put("drowsiness", drowsiness.text.toString())
                             var body = RequestBody.create(
                                 mediaType,
                                 jo.toString()
@@ -138,6 +143,7 @@ class DTOAdapter(context: Context) : BaseAdapter() {
             val alertDialog = alertDialogBuilder.create()
             alertDialog.show()
         }
+        drowsiness.setText(list!![position].drowsiness)
         pressureText.setText(list!![position].pressure)
         headAcheText.setText(list!![position].headAche)
         return vi;

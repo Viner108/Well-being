@@ -8,7 +8,6 @@
     tools:context=".activity.MainActivity">
 
 
-
     <LinearLayout
         android:layout_width="406dp"
         android:layout_height="67dp"
@@ -45,20 +44,21 @@
     <TextView
         android:id="@+id/pressureTextView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginBottom="10dp"
         android:text="Какое сейчас у вас давление?"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/pressureEditTextNumber"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headAcheEditTextNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/sliderDrowsiness" />
 
     <TextView
         android:id="@+id/headAcheTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="100dp"
         android:text="Болит ли у вас сейчас голова?"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="@color/black"
@@ -72,6 +72,7 @@
         android:id="@+id/pressureEditTextNumber"
         android:layout_width="250dp"
         android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
         android:backgroundTint="@color/black"
         android:ems="10"
         android:hint="Введите число"
@@ -101,13 +102,14 @@
         android:id="@+id/headAcheEditTextNumber"
         android:layout_width="250dp"
         android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/black"
         android:ems="10"
         android:hint="Введите число от 1 до 10"
         android:inputType="date"
         android:textColor="@color/black"
         android:textColorHint="@color/cardview_dark_background"
-        app:layout_constraintBottom_toTopOf="@+id/pressureTextView"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headAcheTextView" />
@@ -129,4 +131,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sentImageButton"
         app:layout_constraintVertical_bias="1.0" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sliderDrowsiness"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="256dp"
+        android:layout_height="37dp"
+        android:max="10"
+        android:progress="3"
+        android:progressTint="@color/black"
+        android:secondaryProgressTint="@color/black"
+        android:stepSize="1"
+        android:thumbTint="@color/black"
+        android:tickMarkTint="@color/black"
+        android:valueFrom="0"
+        android:valueTo="10"
+        app:layout_constraintBottom_toTopOf="@+id/pressureTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDrowsiness" />
+
+    <TextView
+        android:id="@+id/textDrowsiness"
+        android:layout_width="335dp"
+        android:layout_height="59dp"
+        android:text="Насколько сонным вы себя сейчас чувствуете?"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/sliderDrowsiness"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headAcheEditTextNumber" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

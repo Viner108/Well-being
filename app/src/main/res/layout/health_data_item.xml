@@ -15,17 +15,26 @@
         android:layout_marginEnd="20sp"
         android:text="Pressure"
         android:textColor="@color/black"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/headAcheTextView"
-        android:layout_width="63dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40sp"
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="30sp"
         android:layout_marginEnd="20sp"
         android:text="Header"
         android:textColor="@color/black"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/drowsinessTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Drowsiness"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/deleteButton"
